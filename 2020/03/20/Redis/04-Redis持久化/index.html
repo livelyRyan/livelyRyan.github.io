@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redis/04-Redis持久化 | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Redis/04-Redis持久化 | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-19T16:29:46.000Z">
+<meta property="article:modified_time" content="2020-03-19T16:29:46.804Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/icon.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/icon.jpg" />
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="email" href="mailto:1135038815@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1135038815&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(13)</small></div></li>
+    
+        
+            
+            <li><div data-rel="工具">工具<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="13">
+<input type="hidden" id="yelog_site_word_count" value="21.8k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="以 in: 开头进行全文搜索" />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color2">a</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">b</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        <a  class="工具 "
+           href="/2020/03/19/test/"
+           data-tag="a,b"
+           data-author="" >
+            <span class="post-title" title="test">test</span>
+            <span class="post-date" title="2020-03-19 23:39:26">2020/03/19</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/19/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-19 21:24:22">2020/03/19</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/04-Redis%E6%8C%81%E4%B9%85%E5%8C%96/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/04-Redis持久化">Redis/04-Redis持久化</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/01-Redis%E4%BB%8B%E7%BB%8D%E5%8F%8ANIO%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/01-Redis介绍及NIO原理介绍">Redis/01-Redis介绍及NIO原理介绍</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/03-Redis%E4%BD%BF%E7%94%A8%E8%BF%9B%E9%98%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/03-Redis使用进阶">Redis/03-Redis使用进阶</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/08-%E5%88%9D%E8%AF%86zk/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/08-初识zk">Redis/08-初识zk</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/02-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/02-Redis数据类型和使用场景">Redis/02-Redis数据类型和使用场景</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/05-Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8F%8A%E9%AB%98%E5%8F%AF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/05-Redis主从复制及高可用">Redis/05-Redis主从复制及高可用</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/09-zk%E8%BF%9B%E9%98%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/09-zk进阶">Redis/09-zk进阶</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/06-%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%E5%8F%8ARedis-Cluster/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/06-数据分片及Redis-Cluster">Redis/06-数据分片及Redis-Cluster</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/README/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/README">Redis/README</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/07-Redis%E5%AE%9E%E6%88%98/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/07-Redis实战">Redis/07-Redis实战</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/SUMMARY/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/SUMMARY">Redis/SUMMARY</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-Redis/04-Redis持久化" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Redis/04-Redis持久化</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-02-27 22:32:17'>2020-03-20 23:32</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:2.1k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis持久化"><span class="toc-text">Redis持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么时候需要持久化"><span class="toc-text">什么时候需要持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单机持久化"><span class="toc-text">单机持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB"><span class="toc-text">RDB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现方式"><span class="toc-text">实现方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#命令"><span class="toc-text">命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置"><span class="toc-text">配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#触发RDB的时机"><span class="toc-text">触发RDB的时机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fork-底层原理"><span class="toc-text">fork 底层原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优缺点"><span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF"><span class="toc-text">AOF</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现方式-1"><span class="toc-text">实现方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#命令-1"><span class="toc-text">命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置-1"><span class="toc-text">配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优缺点-1"><span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置优化建议"><span class="toc-text">配置优化建议</span></a></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h1><h2 id="什么时候需要持久化"><a href="#什么时候需要持久化" class="headerlink" title="什么时候需要持久化"></a>什么时候需要持久化</h2><p>​    当 redis 作为缓存时，性能极高，数据可以丢</p>
+<p>​    当 redis 作为数据库时，性能较高，数据绝对不能丢。因为 redis 是内存数据库，因此<font color='red'>掉电易失</font>，所以这种场景下，必需有数据持久化的解决方案</p>
+<h2 id="单机持久化"><a href="#单机持久化" class="headerlink" title="单机持久化"></a>单机持久化</h2><h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>​    rdb 相当于周期性的对内存数据进行一次快照，快照内容是二进制数据，将快照作为以后的恢复文件。</p>
+<h4 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h4><p><img src="./pics/RDB.jpg" alt="RDB"></p>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><p>​    客户端可以通过命令触发 rdb </p>
+<ul>
+<li><p><code>SAVE</code>：同步保存，使用场景明确，如：关机维护</p>
+</li>
+<li><p><code>BGSAVE</code>：异步方式进行保存，通过 fork 创建子进程方式实现</p>
+<p>对于 rdb 文件，一定是以”REDIS”开头，后面是二进制内容。通过命令行工具可以检查 rdb 文件内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@node162 6380]# redis-check-rdb dump.rdb</span><br><span class="line">[offset 0] Checking RDB file dump.rdb</span><br><span class="line">[offset 26] AUX FIELD redis-ver = '5.0.7'</span><br><span class="line">[offset 40] AUX FIELD redis-bits = '64'</span><br><span class="line">[offset 52] AUX FIELD ctime = '1579335183'</span><br><span class="line">[offset 67] AUX FIELD used-mem = '2028456'</span><br><span class="line">[offset 85] AUX FIELD repl-stream-db = '0'</span><br><span class="line">[offset 135] AUX FIELD repl-id = '39d3efdce306ee509a3df53e4fd95dd930d2fb8f'</span><br><span class="line">[offset 153] AUX FIELD repl-offset = '603016'</span><br><span class="line">[offset 169] AUX FIELD aof-preamble = '0'</span><br><span class="line">[offset 171] Selecting DB ID 0</span><br><span class="line">[offset 206] Checksum OK</span><br><span class="line">[offset 206] \o/ RDB looks OK! \o/</span><br><span class="line">[info] 3 keys read</span><br><span class="line">[info] 0 expires</span><br><span class="line">[info] 0 already expired</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 除了命令行触发rdb，在配置文件中也可以写触发规则，这种触发的是异步保存方式</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> save <span class="string">""</span> 代表关闭 rdb</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 900内触发1次写，就发生 rdb</span></span><br><span class="line">save 900 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 300内触发10次写，就发生 rdb</span></span><br><span class="line">save 300 10</span><br><span class="line"><span class="meta">#</span><span class="bash"> 60内触发10000次写，就发生 rdb</span></span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 是否压缩</span></span><br><span class="line">rdbcompression yes</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件末尾是否生成 checksum 校验</span></span><br><span class="line">rdbchecksum yes</span><br><span class="line"></span><br><span class="line">dbfilename "dump.rdb"</span><br><span class="line">dir "/var/lib/redis/6379"</span><br></pre></td></tr></table></figure>
+
+<h4 id="触发RDB的时机"><a href="#触发RDB的时机" class="headerlink" title="触发RDB的时机"></a>触发RDB的时机</h4><ol>
+<li><code>shutdown</code>时，如果没开启aof，则会触发rdb</li>
+<li>满足了配置文件中<code>save</code>的配置时机</li>
+<li>命令行触发<code>save</code>或者<code>bgsave</code>时</li>
+<li>命令行触发<code>flushall</code>命令时，也会生成一个空的<code>dump.rdb</code>文件</li>
+</ol>
+<h4 id="fork-底层原理"><a href="#fork-底层原理" class="headerlink" title="fork 底层原理"></a>fork 底层原理</h4><p><img src="./pics/fork%E5%8E%9F%E7%90%86.jpg" alt="fork原理"></p>
+<blockquote>
+<p>证明：linux 中管道符 “|” 会触发创建【子进程】</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="string">"$$"</span> 打印当前 shell 进程号</span></span><br><span class="line">[root@localhost data]# echo $$</span><br><span class="line">10169</span><br><span class="line"><span class="meta">#</span><span class="bash"> 为什么下面一条命令打印的进程号和父进程号一样？</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> $$ 优先级高于 |，因此执行管道符之前 $$ 已经被替换了</span></span><br><span class="line">[root@localhost data]# echo $$ | more</span><br><span class="line">10169</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面一条命令证明了：管道符两边的命令会创建子进程</span></span><br><span class="line">[root@localhost data]# echo $BASHPID | more</span><br><span class="line"><span class="meta">#</span><span class="bash"> 子进程号和父进程号不一样</span></span><br><span class="line">17617</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>证明：父进程的数据默认不对子进程可见，通过 export 可以使变量对子进程可见</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在父 shell 里创建变量<span class="string">"a"</span></span></span><br><span class="line">[root@localhost data]# a=10</span><br><span class="line">[root@localhost data]# echo $a</span><br><span class="line">10</span><br><span class="line">[root@localhost data]# echo $$</span><br><span class="line">10169</span><br><span class="line"><span class="meta">#</span><span class="bash"> 新开一个 bash，创建子进程</span></span><br><span class="line">[root@localhost data]# /bin/bash</span><br><span class="line">[root@localhost data]# echo $$</span><br><span class="line"><span class="meta">#</span><span class="bash"> 进程号已改变</span></span><br><span class="line">17653</span><br><span class="line"><span class="meta">#</span><span class="bash"> 子进程获取不到变量<span class="string">"a"</span></span></span><br><span class="line">[root@localhost data]# echo $a</span><br><span class="line"></span><br><span class="line">[root@localhost data]# exit</span><br><span class="line">exit</span><br><span class="line"><span class="meta">#</span><span class="bash"> 回到父进程，一样能看到变量<span class="string">"a"</span></span></span><br><span class="line">[root@localhost data]# echo $a</span><br><span class="line">10</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导出环境变量<span class="string">"a"</span>后，再次进入子进程shell</span></span><br><span class="line">[root@localhost data]# export a=$a</span><br><span class="line">[root@localhost data]# /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash"> 此时子进程就能看到父进程的变量了，说明环境变量是会传递到子进程的！</span></span><br><span class="line">[root@localhost data]# echo $a</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h4><p>优点：</p>
+<ol>
+<li>生成的 dump.rdb 文件内容相对较小</li>
+<li>类似 java 中的序列化，恢复速度相对较快</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>不支持拉链，只有一个<code>dump.rdb</code></li>
+<li>因为是时点性持久化，因此时点与时点之间窗口数据容易丢失，丢失的数据量较多</li>
+</ol>
+<blockquote>
+<p>适合 把 redis 作为缓存，且缓存数据容忍丢失 的场景</p>
+</blockquote>
+<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>​    为了解决 RDB 方式丢失数据较多的问题，另一种持久化 AOF 方式诞生了。</p>
+<h4 id="实现方式-1"><a href="#实现方式-1" class="headerlink" title="实现方式"></a>实现方式</h4><p>​    AOF 实现原理简单，每次发生一笔写操作，就把操作记录到.aof文件中。在恢复的时候，从上往下一条条执行命令即可。.aof 就像一个记录了全量操作的日志文件，以下是一个 aof 文件内容示例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">*2</span><br><span class="line"><span class="meta">$</span><span class="bash">6</span></span><br><span class="line">SELECT</span><br><span class="line"><span class="meta">$</span><span class="bash">1</span></span><br><span class="line">0</span><br><span class="line">*3</span><br><span class="line"><span class="meta">$</span><span class="bash">3</span></span><br><span class="line">set</span><br><span class="line"><span class="meta">$</span><span class="bash">2</span></span><br><span class="line">k2</span><br><span class="line"><span class="meta">$</span><span class="bash">3</span></span><br><span class="line">aaa</span><br><span class="line">*3</span><br><span class="line"><span class="meta">$</span><span class="bash">3</span></span><br><span class="line">set</span><br><span class="line"><span class="meta">$</span><span class="bash">2</span></span><br><span class="line">k3</span><br><span class="line"><span class="meta">$</span><span class="bash">3</span></span><br><span class="line">aaa</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在aof 文件中，</p>
+<p>“$”代表下一行有几个字符；</p>
+<p>“*”代表一个命令用了几行字符串</p>
+<p>上面的文件内容代表以下3条指令：</p>
+<ol>
+<li>SELECT 0</li>
+<li>set k2 aaa</li>
+<li>set k3 aaa</li>
+</ol>
+</blockquote>
+<p>​    <strong>那么问题来了</strong>：redis 运行了 10 年，开启了 AOF。十年后，redis挂了，请问如下问题：</p>
+<ol>
+<li><p>aof 文件有多大？可以无限大，例如 10T</p>
+</li>
+<li><p>恢复时会不会发生内存溢出？不会</p>
+</li>
+<li><p>恢复要多久时间？很长，比如 5 年，因为要一条命令一条命令去执行</p>
+</li>
+</ol>
+<blockquote>
+<p>日志文件无限大，硬盘早就满了，还得一直换硬盘。恢复数据得花好几年，这也叫可用？</p>
+</blockquote>
+<p>​    <strong>解决方案</strong>：redis 提供重写功能。重写功能在4.0之前及之后实现方式不一样，分开讨论</p>
+<ul>
+<li>在 redis 4.0 之前，.aof 是一个纯指令文件，触发重写后 cpu 会进行运算，实现以下两点：<ul>
+<li>删除抵消的命令。如<code>set k1 aa</code>后又进行了<code>rem k1</code>，那么这两条命令就在 aof 文件中移除</li>
+<li>合并重复命令。如执行了一万次<code>INCR k1</code>，可以合并成执行一次<code>INCRBY k1 10000</code></li>
+</ul>
+</li>
+<li>在 redis 4.0 之后，默认是让重写功能不再进行运算，而是会生成 .rdb 文件，并将全量 rdb 内容放到 aof 的开始。之后增量的记录新来的写操作并 append 到 .aof 中。使得 .aof 变成了一个混合体，既有 rdb 的磁盘消耗小、恢复快，又有 aof 的全量数据特性。可以通过配置<code>aof-use-rdb-preamble no</code>使重写还是 redis 4.0 之前的逻辑</li>
+</ul>
+<h4 id="命令-1"><a href="#命令-1" class="headerlink" title="命令"></a>命令</h4><ul>
+<li><code>BGREWRITEAOF</code>：异步触发重写，重写可以缩小 aof 文件内容</li>
+</ul>
+<h4 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 是否开启 aof，默认是不开启</span></span><br><span class="line">appendonly no</span><br><span class="line">appendfilename "appendonly.aof"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 对写操作都进行记录，一定会触发磁盘I/O，影响redis性能。 redis 提供了三种级别来控制 I/O 频率</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> appendfsync 设置调用 flush() 的频率。一旦调用flush()，就会将内核的 buffer 数据写到磁盘中，发生I/O</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> appendfsync always</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"><span class="meta">#</span><span class="bash"> appendfsync no</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 当redis创建子进程，子进程在进行BGSAVE或者BGREWRITEAOF时，会对磁盘进行大量的I/O，此时是否允许触发appendfsync操作，默认是不允许触发。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 不允许触发可以避免I/O争抢，但是容易丢数据</span></span><br><span class="line">no-appendfsync-on-rewrite no</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面两个配置合适触发aof的重写</span></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认是达到64mb就触发重写，但是这个值在生产环境一定要调大，更改为1G级别起步</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> aof 中可以使用 rdb，默认开启</span></span><br><span class="line">aof-use-rdb-preamble yes</span><br></pre></td></tr></table></figure>
+
+<p><code>appendfsync</code>的三个选项含义和特点</p>
+<ul>
+<li><code>no</code>：redis 不主动触发 flush，让 os 自己按需调用。os 会在内核 buffer（4k左右）满时调用 flush，将 buffer 数据刷到 .aof 文件中。速度最快，可能丢失的数据量最大（不到一个 buffer 大小）</li>
+<li><code>everysec</code>：redis 每秒调用一次 flush，丢失的数据量一定比 buffer 容量小，最糟情况是丢失近 buffer 容量数据，不过概率比<code>no</code>小。这是一种折中的方案，速度中等且丢失数据量中等</li>
+<li><code>always</code>：每一次写操作都将调用 flush ，把 buffer 数据刷到 .aof 文件中。数据最多丢失一条，在调用 flush 或者 flush 还没结束时发生掉电。代价是速度最慢</li>
+</ul>
+<blockquote>
+<p>调用flush()，就会将内核的 buffer 数据写到磁盘中，发生一次 I/O</p>
+</blockquote>
+<blockquote>
+<p>在 redis 中，AOF 和 RDB 可以同时开启。如果开启了 AOF，只会用 AOF 去恢复，因为数据丢失少。</p>
+</blockquote>
+<h4 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a>优缺点</h4><p>优点：</p>
+<ol>
+<li>4.0之后，可以将 aof 与 rbd 相结合，既避免了大量数据丢失，又实现了日志文件内容有限、恢复数据块的特点</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>写操作伴随着往 .aof 里写文件，因此会增加磁盘I/O，降低 redis 性能</li>
+<li>4.0 之前，.aof 文件可以很大，并且恢复时间慢</li>
+</ol>
+<blockquote>
+<p>适合 把 redis 当数据库，不允许数据丢失 的场景</p>
+</blockquote>
+<h3 id="配置优化建议"><a href="#配置优化建议" class="headerlink" title="配置优化建议"></a>配置优化建议</h3><ol>
+<li><code>auto-aof-rewrite-min-size 64mb</code>：该配置项值需要改大，达到G级别，比如 <code>5G</code></li>
+<li><code>aof-use-rdb-preamble yes</code>：开启 aof 的混合模式</li>
+<li><code>save 900 1</code>：开启 aof 混合模式后，将 rdb 触发频率调低。此时 rdb 只是个保底方案，无需太频繁进行</li>
+</ol>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1135038815@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Redis/04-Redis持久化</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">2.1k</span></p>
+    <p><span class="copy-title">发布时间:</span>2020-03-20, 23:32:59</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-27, 22:32:17</p>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2020-2024 Ryan</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#a','#b',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().split('\n').length - 1, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("https://i.loli.net/2019/07/22/5d3521411f3f169375.png");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

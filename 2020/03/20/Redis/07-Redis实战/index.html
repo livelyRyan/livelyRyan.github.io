@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hello World | Hexo</title>
+  <title>Redis/07-Redis实战 | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="Hello World | Hexo">
+  <meta name="description" content="Redis/07-Redis实战 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta property="og:type" content="website">
 <meta property="og:title" content="about">
@@ -272,9 +272,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Redis/07-Redis实战" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Hello World</h1>
+        <h1 class="article-title">Redis/07-Redis实战</h1>
     
     <div class="article-meta">
         
@@ -284,12 +284,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-03-19 21:24:22'>2020-03-19 21:24</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-09 14:14:21'>2020-03-20 23:32</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:73</span>
+        <span>字数:109</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -308,7 +308,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis实战"><span class="toc-text">Redis实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#面试高频"><span class="toc-text">面试高频</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#击穿"><span class="toc-text">击穿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#雪崩"><span class="toc-text">雪崩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#穿透"><span class="toc-text">穿透</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式锁"><span class="toc-text">分布式锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发实战"><span class="toc-text">开发实战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#连接"><span class="toc-text">连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#high-low-API"><span class="toc-text">high&#x2F;low API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#序列化"><span class="toc-text">序列化</span></a></li></ol></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -324,19 +324,22 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <h1 id="Redis实战"><a href="#Redis实战" class="headerlink" title="Redis实战"></a>Redis实战</h1><h2 id="面试高频"><a href="#面试高频" class="headerlink" title="面试高频"></a>面试高频</h2><h3 id="击穿"><a href="#击穿" class="headerlink" title="击穿"></a>击穿</h3><p><img src="./pics/%E5%87%BB%E7%A9%BF.png" alt="击穿"></p>
+<h3 id="雪崩"><a href="#雪崩" class="headerlink" title="雪崩"></a>雪崩</h3><p><img src="./pics/%E9%9B%AA%E5%B4%A9.jpg" alt="雪崩"></p>
+<h3 id="穿透"><a href="#穿透" class="headerlink" title="穿透"></a>穿透</h3><p><img src="./pics/%E7%A9%BF%E9%80%8F.jpg" alt="穿透"></p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><ul>
+<li>用 redis 实现分布式锁的步骤<ul>
+<li>setnx</li>
+<li>设置锁过期时间，死锁变活锁</li>
+<li>多线程（守护线程），延长过期时间</li>
+</ul>
+</li>
+<li>redisson：redis java 客户端，实现了分布式锁 api</li>
+<li>redis 实现分布式锁较复杂，zookeeper 当分布式锁更简单、更适合</li>
+</ul>
+<h2 id="开发实战"><a href="#开发实战" class="headerlink" title="开发实战"></a>开发实战</h2><h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><h3 id="high-low-API"><a href="#high-low-API" class="headerlink" title="high/low API"></a>high/low API</h3><h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><blockquote>
+<p>见 <code>redis-demo</code> 项目代码</p>
+</blockquote>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1135038815@qq.com </span>
@@ -346,10 +349,10 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Hello World</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">73</span></p>
-    <p><span class="copy-title">发布时间:</span>2020-03-19, 21:24:22</p>
-    <p><span class="copy-title">最后更新:</span>2020-03-19, 21:24:22</p>
+    <p><span class="copy-title">文章标题:</span>Redis/07-Redis实战</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">109</span></p>
+    <p><span class="copy-title">发布时间:</span>2020-03-20, 23:32:59</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-09, 14:14:21</p>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>

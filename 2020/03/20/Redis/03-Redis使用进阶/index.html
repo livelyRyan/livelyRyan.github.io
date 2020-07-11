@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redis/03-Redis使用进阶 | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Redis/03-Redis使用进阶 | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-19T16:29:46.000Z">
+<meta property="article:modified_time" content="2020-03-19T16:29:46.804Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/icon.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/icon.jpg" />
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="email" href="mailto:1135038815@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1135038815&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(13)</small></div></li>
+    
+        
+            
+            <li><div data-rel="工具">工具<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="13">
+<input type="hidden" id="yelog_site_word_count" value="21.8k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="以 in: 开头进行全文搜索" />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color2">a</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">b</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        <a  class="工具 "
+           href="/2020/03/19/test/"
+           data-tag="a,b"
+           data-author="" >
+            <span class="post-title" title="test">test</span>
+            <span class="post-date" title="2020-03-19 23:39:26">2020/03/19</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/19/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-19 21:24:22">2020/03/19</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/04-Redis%E6%8C%81%E4%B9%85%E5%8C%96/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/04-Redis持久化">Redis/04-Redis持久化</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/01-Redis%E4%BB%8B%E7%BB%8D%E5%8F%8ANIO%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/01-Redis介绍及NIO原理介绍">Redis/01-Redis介绍及NIO原理介绍</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/03-Redis%E4%BD%BF%E7%94%A8%E8%BF%9B%E9%98%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/03-Redis使用进阶">Redis/03-Redis使用进阶</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/08-%E5%88%9D%E8%AF%86zk/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/08-初识zk">Redis/08-初识zk</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/02-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/02-Redis数据类型和使用场景">Redis/02-Redis数据类型和使用场景</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/05-Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8F%8A%E9%AB%98%E5%8F%AF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/05-Redis主从复制及高可用">Redis/05-Redis主从复制及高可用</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/09-zk%E8%BF%9B%E9%98%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/09-zk进阶">Redis/09-zk进阶</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/06-%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%E5%8F%8ARedis-Cluster/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/06-数据分片及Redis-Cluster">Redis/06-数据分片及Redis-Cluster</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/README/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/README">Redis/README</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/07-Redis%E5%AE%9E%E6%88%98/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/07-Redis实战">Redis/07-Redis实战</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/SUMMARY/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/SUMMARY">Redis/SUMMARY</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-Redis/03-Redis使用进阶" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Redis/03-Redis使用进阶</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-02-04 16:35:47'>2020-03-20 23:32</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:3.1k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis使用进阶"><span class="toc-text">Redis使用进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#pipeline"><span class="toc-text">pipeline</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pub-Sub"><span class="toc-text">Pub&#x2F;Sub</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#modules-RedisBloom"><span class="toc-text">modules-RedisBloom</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用途"><span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存在的问题"><span class="toc-text">存在的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#误判"><span class="toc-text">误判</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无法删除"><span class="toc-text">无法删除</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis作为数据库和作为缓存的区别"><span class="toc-text">Redis作为数据库和作为缓存的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#设置过期时间"><span class="toc-text">设置过期时间</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方式"><span class="toc-text">使用方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注意点"><span class="toc-text">注意点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#如何淘汰过期的-keys"><span class="toc-text">如何淘汰过期的 keys</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置缓存淘汰算法"><span class="toc-text">设置缓存淘汰算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用方式-1"><span class="toc-text">使用方式</span></a></li></ol></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis使用进阶"><a href="#Redis使用进阶" class="headerlink" title="Redis使用进阶"></a>Redis使用进阶</h1><h2 id="pipeline"><a href="#pipeline" class="headerlink" title="pipeline"></a>pipeline</h2><p>​    使用pipeline，实现一次发送多个命令，节省往返时间</p>
+<blockquote>
+<p>先安装 nc 命令行：<code>yum install -y nc</code></p>
+<p>nc：Concatenate and redirect sockets，连接和重定向 socket 套接字</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 一次发送多个命令</span></span><br><span class="line">[root@localhost ~]# echo -e 'keys *\n set k2 a \n keys *' |nc localhost 6379   </span><br><span class="line">*2</span><br><span class="line"><span class="meta">$</span><span class="bash">2</span></span><br><span class="line">k1</span><br><span class="line"><span class="meta">$</span><span class="bash">2</span></span><br><span class="line">k3</span><br><span class="line">+OK</span><br><span class="line">*3</span><br><span class="line"><span class="meta">$</span><span class="bash">2</span></span><br><span class="line">k2</span><br><span class="line"><span class="meta">$</span><span class="bash">2</span></span><br><span class="line">k1</span><br><span class="line"><span class="meta">$</span><span class="bash">2</span></span><br><span class="line">k3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用 pipeline 时，服务器将被迫回复一个队列答复，占用很多内存。</p>
+<p>因此，如果需要发送大量命令，最好把它们按照合理数量分批次的处理。</p>
+<p>例如10K的命令，读回复，然后再发送另一个10k的命令，等等。这样速度几乎是相同的，但是在回复这10k命令队列需要非常大量的内存用来组织返回数据内容。</p>
+</blockquote>
+<blockquote>
+<p>大量 pipeline 应用场景可通过 Redis 脚本（Redis 版本 &gt;= 2.6）得到更高效的处理，且脚本功能比 pipeline 更强大，可以获取命令的结果并供后续使用</p>
+</blockquote>
+<h2 id="Pub-Sub"><a href="#Pub-Sub" class="headerlink" title="Pub/Sub"></a>Pub/Sub</h2><p>​    订阅，取消订阅和发布实现了发布/订阅消息范式(引自wikipedia)，发送者（发布者）不是计划发送消息给特定的接收者（订阅者）。而是发布的消息分到不同的频道，不需要知道什么样的订阅者订阅。订阅者对一个或多个频道感兴趣，只需接收感兴趣的消息，不需要知道什么样的发布者发布的。这种发布者和订阅者的解耦合可以带来更大的扩展性和更加动态的网络拓扑。</p>
+<blockquote>
+<p><code>help @pubsub</code></p>
+</blockquote>
+<ol>
+<li><p><code>PUBLISH channel message</code></p>
+</li>
+<li><p><code>SUBSCRIBE channel [channel ...]</code>：监听指定 channel 里的消息，不会监听到在该命令执行时刻之前发布的消息</p>
+</li>
+<li><p><code>PSUBSCRIBE pattern [pattern ...]</code>：同时监听多个满足 pattern 正则的 channel</p>
+<p>下图是以微信为例，一个架构示例。</p>
+</li>
+</ol>
+<p><img src="./pics/pubsub%E7%94%A8%E9%80%94.png" alt="pub/sub用途"></p>
+<p>​    解决方案有两个：</p>
+<ul>
+<li><p>改架构，增加一个 redis 实例</p>
+<p><img src="./pics/%E5%A2%9E%E5%8A%A0redis%E5%AE%9E%E4%BE%8B.png" alt="增加redis实例"></p>
+</li>
+<li><p>在 client 2 中将3步操作合并为一个事务，在下一节中说明</p>
+</li>
+</ul>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><blockquote>
+<p><code>help @transactions</code></p>
+</blockquote>
+<ol>
+<li><code>WATCH key [key ...]</code>：监听多个 key ，一般是在事务开启前就开始监听。当事务提交后，如果事务里要操作的 key 在之前就被监听了，并且这个 key 已被其它连接修改了，那么整个事务不会执行而直接返回<code>nil</code></li>
+<li><code>MULTI</code>：开启事务的命令。一旦事务开启后，之后的命令都会被放到 queue 中，在提交事务时一并发出</li>
+<li><code>DISCARD</code>：丢弃 queue 中所有的命令</li>
+<li><code>EXEC</code>：提交事务</li>
+<li><code>UNWATCH</code>：取消所有之前 <code>WATCH</code> 的 key</li>
+</ol>
+<blockquote>
+<p>如果多个连接都有各自的事务，那么事务的执行顺序规则是：<font color='red'>谁的<code>exec</code>先到达，就先执行谁的事务</font>，与谁先开启事务无关</p>
+</blockquote>
+<p>什么时候事务会出错？</p>
+<ol>
+<li><p>事务在执行 <code>EXEC</code> 之前，入队的命令语法错误，或者内存不足。</p>
+<p>这种情况会直接导致事务关闭，命令队列消失</p>
+</li>
+<li><p>可能在 <code>EXEC</code> 调用之后失败，事务中的命令可能处理了错误类型的键，比如将列表命令用在了字符串键上面。</p>
+<p>在这种情况下，<strong>Redis 在事务中的某条命令执行失败时不进行回滚，而是继续执行事务中余下的命令！</strong></p>
+</li>
+</ol>
+<h2 id="modules-RedisBloom"><a href="#modules-RedisBloom" class="headerlink" title="modules-RedisBloom"></a>modules-RedisBloom</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>​    Redis支持安装模块。这里以布隆过滤器模块为例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载</span></span><br><span class="line">wget https://github.com/RedisBloom/RedisBloom/archive/master.zip</span><br><span class="line">yum install -y unzip</span><br><span class="line">unzip master.zip</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编译出 redisbloom.so 模块文件</span></span><br><span class="line">cd RedisBloom-master/</span><br><span class="line">make</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 装载 module</span></span><br><span class="line">vi /etc/redis/6379.conf</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在配置文件里增加 loadmodule 配置：loadmodule /opt/redis/redisbloom.so</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 注意： module 文件的位置一定要配置成绝对路径，否则加载不了 redis 启动不起来</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启 redis 服务</span></span><br><span class="line">systemctl stop redis_6379</span><br><span class="line">systemctl start redis_6379</span><br></pre></td></tr></table></figure>
+
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p>​    布隆过滤器是为了解决缓存穿透问题。</p>
+<blockquote>
+<p>什么是缓存穿透？</p>
+<p>例如淘宝商品搜索功能，有一个黑客，用多个客户端进行商品关键字搜索，搜索的字眼根本不是商品，不在任何数据库中，因此缓存不会命中，那么请求就会穿透到数据库层。一旦无数个请求都穿透到数据库层，数据库就可能会崩掉。</p>
+</blockquote>
+<p>​    它是如何解决的呢？布隆过滤器底层维护了一个 bitmap ，要对搜索进行过滤，先需要把所有的商品都加到布隆过滤器中，一个商品的添加流程是：</p>
+<ol>
+<li><p>对商品做十几个不同的 hash 函数计算，得到十几个结果值</p>
+</li>
+<li><p>把结果值与 bitmap 中的一个位对应，将该位值置为”1”</p>
+<p>当来了一个搜索关键字，需要判断是否存在该商品，流程如下：</p>
+</li>
+<li><p>对该商品做一次 hash 函数计算，得到结果值</p>
+</li>
+<li><p>找到结果值对应 bitmap 位上的值，检查值是否为”1”</p>
+</li>
+<li><p>为 “1” 则换一个 hash 函数进行计算，重复1、2、3步骤，直到算完所有的 hash 函数，都为 “1” 代表存在该商品</p>
+</li>
+<li><p>为 “0” 则代表该商品不存在，直接返回</p>
+</li>
+</ol>
+<blockquote>
+<p>注意：当数据库中增加了商品种类时，也需要同步在布隆过滤器中进行添加</p>
+</blockquote>
+<p><img src="./pics/bloom%E5%8E%9F%E7%90%86%E5%9B%BE.png" alt="布隆过滤器原理"></p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; BF.MADD bikes didi  mobai halou</span><br><span class="line">1) (integer) 1</span><br><span class="line">2) (integer) 1</span><br><span class="line">3) (integer) 1</span><br><span class="line">127.0.0.1:6379&gt; BF.INFO bikes</span><br><span class="line"> 1) Capacity</span><br><span class="line"> 2) (integer) 100</span><br><span class="line"> 3) Size</span><br><span class="line"> 4) (integer) 290</span><br><span class="line"> 5) Number of filters</span><br><span class="line"> 6) (integer) 1</span><br><span class="line"> 7) Number of items inserted</span><br><span class="line"> 8) (integer) 4</span><br><span class="line"> 9) Expansion rate</span><br><span class="line">10) (integer) 2</span><br><span class="line">127.0.0.1:6379&gt; BF.EXISTS bikes didi</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; BF.MEXISTS bikes ofo yonganxing</span><br><span class="line">1) (integer) 1</span><br><span class="line">2) (integer) 0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>为什么没有类似 <code>BF.DEL</code> 、<code>BF.REM</code> 命令？</p>
+<p>因为布隆过滤器的原理导致它没法支持删除元素操作，因为不同的元素可能会在 bitmap 同一位上发生碰撞，都设置成了 “1”。 如果其中一个元素删除了，把它对应位都还原成0，那么和该元素发生碰撞的其它元素也就不存在了，所以没法实现删除功能</p>
+</blockquote>
+<blockquote>
+<p>客户端、服务器使用布隆过滤器的三种方式，根据场景做具体选型</p>
+<p><img src="./pics/client-redis-with-bloom.png" alt="client-redis-with-bloom"></p>
+</blockquote>
+<h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><h4 id="误判"><a href="#误判" class="headerlink" title="误判"></a>误判</h4><p>​    多个商品的多个 hash 函数结果值，可能会对应到 bitmap 同一位上，产生碰撞，因此只能概率解决问题，不可能百分百阻挡，误判概率常低于 1%。</p>
+<blockquote>
+<p>如何解决这个问题？</p>
+<p>在穿透后打到 mysql 里，mysql 会返回空或者报错，client 发现是空或者商品不存在后，在 redis 中增加这个穿透了布隆过滤器的关键字信息。以后当再有人查同样的关键字时，redis 直接返回空，不再发生二次穿透</p>
+</blockquote>
+<h4 id="无法删除"><a href="#无法删除" class="headerlink" title="无法删除"></a>无法删除</h4><p>​    为了解决 bloom 无法删除，<code>cuckoo filter</code>布谷鸟过滤器横空出世。</p>
+<p>​    布谷鸟过滤器对于 bloom 过滤器有以下优势：查询性能强、空间利用效率高、支持反向操作（删除）以及支持计数。</p>
+<p>​    但布谷鸟并没有想象中那么好，有很多问题：</p>
+<ol>
+<li>bitmap 长度必须是 2 的指数，而 bloom 并没有长度要求</li>
+<li>删除操作有个致命弱点，必须确保每个元素不会被插入指定的 x 次，这个 x 是根据一定规则算出来的一个固定值。这在实际使用中根本不可能保证，因为还需要额外空间存储每个元素插入的次数</li>
+<li>无法准确估计内部元素数量</li>
+</ol>
+<blockquote>
+<p>参考文章：<a href="https://cloud.tencent.com/developer/article/1447177" target="_blank" rel="noopener">布隆过滤器过时了，未来属于布谷鸟过滤器？</a></p>
+</blockquote>
+<h2 id="Redis作为数据库和作为缓存的区别"><a href="#Redis作为数据库和作为缓存的区别" class="headerlink" title="Redis作为数据库和作为缓存的区别"></a>Redis作为数据库和作为缓存的区别</h2><p>​    Redis作为缓存，相比数据库数据，有如下特点：</p>
+<ol>
+<li><p>缓存数据准确性不重要</p>
+</li>
+<li><p>缓存数据不需要全量</p>
+</li>
+<li><p>缓存数据应随着访问而变化</p>
+</li>
+<li><p>内存是有限的，在内存不够情况下，应只保留热数据</p>
+<p>那么问题来了，redis 如何做到随着业务变化，只保留热数据，避免内存成为瓶颈？</p>
+</li>
+</ol>
+<h3 id="设置过期时间"><a href="#设置过期时间" class="headerlink" title="设置过期时间"></a>设置过期时间</h3><p>​    有的业务逻辑，需要对 key 的有效期进行管理，如分布式锁。当到了过期时间后，key 就被删除了，内存也就释放了。</p>
+<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在具体命令里设置过期时间</span></span><br><span class="line">127.0.0.1:6379&gt; set k1 10 EX 10</span><br><span class="line">OK</span><br><span class="line"><span class="meta">#</span><span class="bash"> 通过 TTL 命令，查看 k1 剩余时间</span></span><br><span class="line">127.0.0.1:6379&gt; TTL k1</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; TTL k1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 返回 -2 代表 k1 已过期</span></span><br><span class="line">(integer) -2</span><br><span class="line">127.0.0.1:6379&gt; SET k2 aa</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; TTL k2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 返回 -1 代表 k2 不会过期</span></span><br><span class="line">(integer) -1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 通用的设置 key 过期时间的命令：EXPIRE</span></span><br><span class="line">127.0.0.1:6379&gt; EXPIRE k2 10</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; TTL k2</span><br><span class="line">(integer) 5</span><br><span class="line"><span class="meta">#</span><span class="bash"> 对已有过期时间的 key 再次设置过期时间时，会更新有效期</span></span><br><span class="line">127.0.0.1:6379&gt; EXPIRE k2 10</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; TTL k2</span><br><span class="line">(integer) 9</span><br><span class="line"><span class="meta">#</span><span class="bash"> 读操作 不会更新过期时间</span></span><br><span class="line">127.0.0.1:6379&gt; GET k2</span><br><span class="line">"aa"</span><br><span class="line">127.0.0.1:6379&gt; TTL k2</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; SET k2 bb</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; EXPIRE k2 10</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; TTL k2</span><br><span class="line">(integer) 7</span><br><span class="line"><span class="meta">#</span><span class="bash"> 写操作，直接剔除过期时间</span></span><br><span class="line">127.0.0.1:6379&gt; SET k2 cc</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; TTL k2</span><br><span class="line">(integer) -1</span><br></pre></td></tr></table></figure>
+
+<h4 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h4><ol>
+<li><code>EXPIRE key seconds</code>：通用的过期时间设置方式，指定剩余有效时间（倒计时）</li>
+<li><code>EXPIREAT key timestamp</code>：通用的过期时间设置方式，指定删除的时间戳，到达改时间就删除（定时）</li>
+<li><code>TTL key</code>：查看指定 key 的剩余存活时间<ul>
+<li>返回 “-1” 代表永不过期</li>
+<li>返回 “-2” 代表已经过期</li>
+<li>返回 非负数代表剩余有效时间，单位是秒</li>
+</ul>
+</li>
+<li>对已有过期时间的 key 再次通过 <code>EXPIRE</code> 设置过期时间，会更新过期时间</li>
+<li>读操作，不会影响过期时间</li>
+<li>写操作，会直接剔除过期时间</li>
+</ol>
+<h4 id="如何淘汰过期的-keys"><a href="#如何淘汰过期的-keys" class="headerlink" title="如何淘汰过期的 keys"></a>如何淘汰过期的 keys</h4><p>​    redis 是如何实现过期的？有两种方式，主动和被动</p>
+<ul>
+<li><p>被动：当一些客户端尝试访问某个 key 时，发现 key 已经过期，就返回 <code>nil</code> 并删除数据释放内存</p>
+<p>只有被动方式是不够的，有些 key 已过期且一直没人访问，这些 key 却一直在内存中，因此还需主动方式</p>
+</li>
+<li><p>主动：定时随机测试部分 keys 的过期时间，所有这些过期的 keys 将会从内存中删除。</p>
+<p>具体就是Redis每秒10次做的事情：</p>
+<ol>
+<li>随机的测试20个 keys 进行过期检测</li>
+<li>删除所有已经过期的 keys</li>
+<li>如果有多于25%的 keys 过期，重复步骤1</li>
+</ol>
+<p>被动和主动组合使用，最终达到的效果是：牺牲少量内存，保住 redis 的性能！</p>
+</li>
+</ul>
+<h3 id="设置缓存淘汰算法"><a href="#设置缓存淘汰算法" class="headerlink" title="设置缓存淘汰算法"></a>设置缓存淘汰算法</h3><p>​    内存是有限的，随着访问的变化，应该删除掉冷数据，避免内存成为瓶颈。</p>
+<h4 id="使用方式-1"><a href="#使用方式-1" class="headerlink" title="使用方式"></a>使用方式</h4><ol>
+<li><p>如何设置 redis 使用的内存空间大小</p>
+<p>在 redis 的配置文件 <code>redis.conf</code> 中，通过<code>maxmemory &lt;bytes&gt;</code>字段进行设置。对于64位系统，默认值代表没有内存限制。</p>
+</li>
+<li><p>如何设置数据回收策略<br>同样在 <code>redis.conf</code> 中，通过 <code>maxmemory-policy noeviction</code>进行设置，默认是是 <code>noeviction</code></p>
+</li>
+<li><p>支持的回收策略</p>
+<ul>
+<li><code>noeviction</code>：不做回收，当没内存时直接返回错误。这是把 redis 当作数据库使用时的回收策略</li>
+<li><code>volatile-lru</code></li>
+<li><code>allkeys-lru</code>：很常用，做缓存时如果不指定选什么策略，那就选它</li>
+<li><code>volatile-lfu</code></li>
+<li><code>allkeys-lfu</code></li>
+<li><code>volatile-random</code>：适合 单一的 redis 实例实现缓存及持久化一些键 的场景</li>
+<li><code>allkeys-random</code>：适合循环访问，所有的键被连续的扫描场景</li>
+<li><code>volatile-ttl</code>：移除刚刚到期（较小的TTL）的 key。适合 想要通过对象的TTL值来决定哪些对象应该被过期 的场景</li>
+</ul>
+<p><code>volatile</code>前缀的代表移出范围是所有过期的 keys，如果所有对象都没有过期，那么效果就和<code>noeviction</code>一样；<code>allkeys</code>前缀代表针对所有的 keys</p>
+<p><code>lru</code>代表移除最长时间没用的 keys；<code>lfu</code>代表移除最少使用次数的 keys；<code>random</code>代表随机移除</p>
+</li>
+</ol>
+<p><img src="./pics/redis%E4%BD%9C%E4%B8%BA%E7%BC%93%E5%AD%98%E7%9A%84%E9%87%8D%E7%82%B9.png" alt="redis作为缓存的重点"></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1135038815@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Redis/03-Redis使用进阶</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">3.1k</span></p>
+    <p><span class="copy-title">发布时间:</span>2020-03-20, 23:32:59</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-04, 16:35:47</p>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2020-2024 Ryan</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#a','#b',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().split('\n').length - 1, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("https://i.loli.net/2019/07/22/5d3521411f3f169375.png");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

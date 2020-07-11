@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redis/01-Redis介绍及NIO原理介绍 | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="Redis/01-Redis介绍及NIO原理介绍 | Hexo">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-19T16:29:46.000Z">
+<meta property="article:modified_time" content="2020-03-19T16:29:46.804Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/icon.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/icon.jpg" />
+</a>
+<div class="author">
+    <span>John Doe</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="email" href="mailto:1135038815@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1135038815&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(13)</small></div></li>
+    
+        
+            
+            <li><div data-rel="工具">工具<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="13">
+<input type="hidden" id="yelog_site_word_count" value="21.8k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="以 in: 开头进行全文搜索" />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color2">a</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">b</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        <a  class="工具 "
+           href="/2020/03/19/test/"
+           data-tag="a,b"
+           data-author="" >
+            <span class="post-title" title="test">test</span>
+            <span class="post-date" title="2020-03-19 23:39:26">2020/03/19</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/19/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-19 21:24:22">2020/03/19</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/04-Redis%E6%8C%81%E4%B9%85%E5%8C%96/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/04-Redis持久化">Redis/04-Redis持久化</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/01-Redis%E4%BB%8B%E7%BB%8D%E5%8F%8ANIO%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/01-Redis介绍及NIO原理介绍">Redis/01-Redis介绍及NIO原理介绍</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/03-Redis%E4%BD%BF%E7%94%A8%E8%BF%9B%E9%98%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/03-Redis使用进阶">Redis/03-Redis使用进阶</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/08-%E5%88%9D%E8%AF%86zk/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/08-初识zk">Redis/08-初识zk</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/02-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/02-Redis数据类型和使用场景">Redis/02-Redis数据类型和使用场景</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/05-Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8F%8A%E9%AB%98%E5%8F%AF%E7%94%A8/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/05-Redis主从复制及高可用">Redis/05-Redis主从复制及高可用</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/09-zk%E8%BF%9B%E9%98%B6/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/09-zk进阶">Redis/09-zk进阶</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/06-%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%E5%8F%8ARedis-Cluster/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/06-数据分片及Redis-Cluster">Redis/06-数据分片及Redis-Cluster</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/README/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/README">Redis/README</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/07-Redis%E5%AE%9E%E6%88%98/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/07-Redis实战">Redis/07-Redis实战</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/20/Redis/SUMMARY/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Redis/SUMMARY">Redis/SUMMARY</span>
+            <span class="post-date" title="2020-03-20 23:32:59">2020/03/20</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-Redis/01-Redis介绍及NIO原理介绍" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Redis/01-Redis介绍及NIO原理介绍</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-02-04 12:54:54'>2020-03-20 23:32</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:3.3k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis介绍及NIO原理介绍"><span class="toc-text">Redis介绍及NIO原理介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis缓存的由来"><span class="toc-text">Redis缓存的由来</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一-数据存在硬盘上"><span class="toc-text">一. 数据存在硬盘上</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#痛点"><span class="toc-text">痛点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二-关系型数据库的出现"><span class="toc-text">二. 关系型数据库的出现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#痛点-1"><span class="toc-text">痛点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三-内存级别关系型数据库"><span class="toc-text">三. 内存级别关系型数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#痛点-2"><span class="toc-text">痛点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四-缓存的出现"><span class="toc-text">四. 缓存的出现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis基本介绍"><span class="toc-text">Redis基本介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义"><span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#和memcached差异"><span class="toc-text">和memcached差异</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux内核的socket-I-O演进"><span class="toc-text">linux内核的socket I&#x2F;O演进</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BIO"><span class="toc-text">BIO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NIO"><span class="toc-text">NIO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多路复用的NIO"><span class="toc-text">多路复用的NIO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#共享空间的多路复用NIO"><span class="toc-text">共享空间的多路复用NIO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#未实现的AIO"><span class="toc-text">未实现的AIO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sendfile零拷贝"><span class="toc-text">sendfile零拷贝</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis底层架构"><span class="toc-text">Redis底层架构</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis介绍及NIO原理介绍"><a href="#Redis介绍及NIO原理介绍" class="headerlink" title="Redis介绍及NIO原理介绍"></a>Redis介绍及NIO原理介绍</h1><h2 id="Redis缓存的由来"><a href="#Redis缓存的由来" class="headerlink" title="Redis缓存的由来"></a>Redis缓存的由来</h2><h3 id="一-数据存在硬盘上"><a href="#一-数据存在硬盘上" class="headerlink" title="一. 数据存在硬盘上"></a>一. 数据存在硬盘上</h3><p>​    起初，数据都在硬盘上，以文件形式进行存储和管理。当要获取特定数据时，可以通过linux命令<code>grep</code>，<code>awk</code>，或者写java程序来处理.</p>
+<h4 id="痛点"><a href="#痛点" class="headerlink" title="痛点"></a>痛点</h4><p>​    随着文件变大，处理速度变慢了，为什么?因为硬盘I/O成为瓶颈，硬盘存取数据慢.</p>
+<blockquote>
+<p>常识:</p>
+<p>带宽: 指的是设备在传输数据的时候数据流的速度</p>
+<p>机械硬盘:</p>
+<pre><code>1. 寻址: ms
+2. 带宽: x0MBps</code></pre><p>固态硬盘:</p>
+<pre><code>1. 寻址: 由于不用磁头，寻址时间几乎为0
+2. 带宽: x00MBps</code></pre><p>内存:</p>
+<pre><code>1. 寻址: ns
+2. 带宽: GBps</code></pre><p>内存存取数据的速度是机械硬盘的10w倍，是固态硬盘的1k倍</p>
+<p>硬盘的带宽比内存满了10倍</p>
+</blockquote>
+<blockquote>
+<p>I/O buffer: 成本问题</p>
+<p>磁盘有磁道和扇区，一扇区有512个Bytes.如果操作系统一次只读取512个Bytes，那么索引成本就会变大</p>
+<p>实际情况是，无论你读多少数据，os都是直接默认读取4k的倍数，这样索引成本会减小.</p>
+<p>格式化磁盘的时候，存在4k对齐事情，就是将文件系统格式与硬盘物理层上进行契合，为了提高硬盘寿命与高效使用硬盘空间</p>
+</blockquote>
+<h3 id="二-关系型数据库的出现"><a href="#二-关系型数据库的出现" class="headerlink" title="二. 关系型数据库的出现"></a>二. 关系型数据库的出现</h3><p>​    为了解决硬盘I/O瓶颈问题，数据库出现了.</p>
+<ol>
+<li><p>数据库里数据由多个data page组成，每个data page大小都是4k，可以和操作系统的4k对上.操作系统每次读数据就是读整数个data page数据.</p>
+</li>
+<li><p>每个data page里包含多条数据，通过主键可以快速在这4k里找到对应条目数据.</p>
+</li>
+<li><p>在关系型数据库中，schema(表规格，数据类型等)必须提前定义好，这时每行数据所需字节数已经固定了，当插入数据时，会进行<font color='green'>行级存储</font>（如果一行一共有10个字段，只有2个字段设了值，那么没设值的字段也会用字节把磁盘位置占住，当修改这条记录时，只需要覆盖对应位置磁盘数据，而不需要移动数据）.</p>
+</li>
+<li><p>如果只是把数据分成了data page，找数据时候还是一个4k一个4k的找，此时效率并没有提升，仍然走的是全量I/O.为此数据库提供了针对列的索引功能.索引也存储在data page里，同时在内存中会维护一个B+树，这个B+树所有树干是在内存中的，而叶子指向存了索引的data page. 当一个sql来了，通过where语句匹配到索引字段，B+树就把索引对应的data page读到内存，进行解析，找到对应数据行所在的data page，最后读取该数据data page，从而找到行数据.</p>
+</li>
+</ol>
+<p>   简单来说，数据库将数据分成4k存储，与os的一次磁盘读取量一致，<font color='red'>性能的提升关键是增加索引来实现.</font></p>
+<p>   ![关系型数据库data page与索引](.\pics\关系型数据库data page与索引.jpg)</p>
+<h4 id="痛点-1"><a href="#痛点-1" class="headerlink" title="痛点"></a>痛点</h4><p>​    当数据库表很大时，性能会如何?假设表有索引的情况</p>
+<ul>
+<li>增删改会变慢</li>
+<li>查询速度如何?<ul>
+<li>1个或少量查询依然很快</li>
+<li>并发大的时候，会受硬盘带宽限制影响速度.因为在进行大量查询时，要查询大量的data page，此时硬盘仍是瓶颈</li>
+</ul>
+</li>
+</ul>
+<h3 id="三-内存级别关系型数据库"><a href="#三-内存级别关系型数据库" class="headerlink" title="三. 内存级别关系型数据库"></a>三. 内存级别关系型数据库</h3><p>​    有一家公司叫SAP，量级和IBM类似，该公司发明了一种内存级别的关系型数据库HANA，这个数据库数据全部存在内存里，内存约是2TB，数据吞吐量高达100 GBps.</p>
+<p>​    数据放在磁盘和数据放在内存中耗费的体积是不一样的，由于磁盘需要额外空间存储指针，存储索引等，一个数据存了多份，存在数据涨出，而内存里不需要存索引、指针，因此存在内存中耗费更少体积。</p>
+<h4 id="痛点-2"><a href="#痛点-2" class="headerlink" title="痛点"></a>痛点</h4><p>​    性能上确实没问题了，但是运行数据库的服务器都是定制的，整台机器+数据库软件+服务的价格约是2亿，成本太高，普通公司用不起.</p>
+<h3 id="四-缓存的出现"><a href="#四-缓存的出现" class="headerlink" title="四. 缓存的出现"></a>四. 缓存的出现</h3><p>​    用硬盘的关系型数据库在高并发下硬盘仍是瓶颈，而内存级关系型数据库太贵根本用不起，为了找到折中的方案，缓存的概念被提出了，将一部分数据从硬盘中迁到内存里做计算，这部分数据就叫缓存。</p>
+<blockquote>
+<p><a href="https://db-engines.com/en/" target="_blank" rel="noopener">数据库引擎排行网站</a>：一个很有价值、全面的数据库网站，可以看到各种数据库的最新排行和特点，适合数据库技术选项时候查阅。</p>
+</blockquote>
+<p><img src=".%5Cpics%5C%E5%8E%86%E5%8F%B2%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B.png" alt="历史技术演进"></p>
+<h2 id="Redis基本介绍"><a href="#Redis基本介绍" class="headerlink" title="Redis基本介绍"></a>Redis基本介绍</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>​    Redis 是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。 它支持多种类型的数据结构，如 <a href="http://redis.cn/topics/data-types-intro.html#strings" target="_blank" rel="noopener">字符串（strings）</a>， <a href="http://redis.cn/topics/data-types-intro.html#hashes" target="_blank" rel="noopener">散列（hashes）</a>， <a href="http://redis.cn/topics/data-types-intro.html#lists" target="_blank" rel="noopener">列表（lists）</a>， <a href="http://redis.cn/topics/data-types-intro.html#sets" target="_blank" rel="noopener">集合（sets）</a>， <a href="http://redis.cn/topics/data-types-intro.html#sorted-sets" target="_blank" rel="noopener">有序集合（sorted sets）</a> 与范围查询， <a href="http://redis.cn/topics/data-types-intro.html#bitmaps" target="_blank" rel="noopener">bitmaps</a>， <a href="http://redis.cn/topics/data-types-intro.html#hyperloglogs" target="_blank" rel="noopener">hyperloglogs</a> 和 <a href="http://redis.cn/commands/geoadd.html" target="_blank" rel="noopener">地理空间（geospatial）</a> 索引半径查询。 Redis 内置了 <a href="http://redis.cn/topics/replication.html" target="_blank" rel="noopener">复制（replication）</a>，<a href="http://redis.cn/commands/eval.html" target="_blank" rel="noopener">LUA脚本（Lua scripting）</a>， <a href="http://redis.cn/topics/lru-cache.html" target="_blank" rel="noopener">LRU驱动事件（LRU eviction）</a>，<a href="http://redis.cn/topics/transactions.html" target="_blank" rel="noopener">事务（transactions）</a> 和不同级别的 <a href="http://redis.cn/topics/persistence.html" target="_blank" rel="noopener">磁盘持久化（persistence）</a>， 并通过 <a href="http://redis.cn/topics/sentinel.html" target="_blank" rel="noopener">Redis哨兵（Sentinel）</a>和自动 <a href="http://redis.cn/topics/cluster-tutorial.html" target="_blank" rel="noopener">分区（Cluster）</a>提供高可用性（high availability）。</p>
+<blockquote>
+<p><a href="https://redis.io" target="_blank" rel="noopener">英文官网</a>、<a href="http://redis.cn/" target="_blank" rel="noopener">中文官网</a></p>
+</blockquote>
+<h3 id="和memcached差异"><a href="#和memcached差异" class="headerlink" title="和memcached差异"></a>和memcached差异</h3><p>​    从Redis定义可以看出，Redis数据以key、value形式存储，其中value是分数据结构的。而在Redis之前已经存在了一个key、value型的内存数据库memcached，但是memcached的value是不区分类型的，这使我们自然而然想到了json。</p>
+<ol>
+<li>memcached的value可以存储json格式数据，json格式本身可以表现任何复杂的数据。</li>
+<li>如果memcached存储的是json格式数据，数据可以很大很复杂，这就带来三个特点：<ol>
+<li>客户端每次必须获取json的全量数据；</li>
+<li>全量数据都是要走客户端、服务端网卡I/O的，当数据很大时容易成为瓶颈；</li>
+<li>client在获取json数据后，需要有代码实现进行数据解析。</li>
+</ol>
+</li>
+<li>Redis中值的类型并不重要，一个字符串类型就可以存储json格式数据来呈现复杂的数据结构。重要的是redis-server对每种类型提供了相应的方法，如<code>strlen</code>、<code>index</code>、<code>lpop</code>等。这体现了一种大数据中的重要思想：<font color='red'>计算向数据移动</font>。</li>
+</ol>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><img src=".%5Cpics%5Credis%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4.jpg" alt="redis安装步骤"></p>
+<p>​    三个知识点：</p>
+<ol>
+<li><font color='red'>下载完源码包后，要条件反射地看README！所有的编译、安装、服务化启动等操作步骤里面全有</font></li>
+<li>第16步，配置redis以服务化形式运行，执行脚本后会在<code>/etc/init.d/</code>目录下生成一个redis_6379.server文件，作为redis_6379服务的执行脚本，当执行<code>service redis_6379</code>或者<code>systemctl</code>命令时就会执行该脚本</li>
+<li>Redis可以装多个，在不同的端口上运行，服务名称为<code>redis_$PORT</code></li>
+</ol>
+<h2 id="linux内核的socket-I-O演进"><a href="#linux内核的socket-I-O演进" class="headerlink" title="linux内核的socket I/O演进"></a>linux内核的socket I/O演进</h2><p>​    众所周知Redis性能很高，号称单机15w并发。Redis性能高的原因与它的底层模型密不可分。Redis分客户端和服务端，那么一定会走以太网进行socket连接（socket是对TCP/IP的封装），socket的I/O将会是性能的关键。</p>
+<p>​    在理解Redis模型之前，需要对linux内核中的socket I/O演进有了解。</p>
+<h3 id="BIO"><a href="#BIO" class="headerlink" title="BIO"></a>BIO</h3><p>​    这是最初的socket模型，BIO全称是blocking I/O，同步阻塞I/O。</p>
+<p><img src="./pics/BIO.jpg" alt="BIO"></p>
+<blockquote>
+<p>查看进程的所有文件描述符：</p>
+<p>ps -ef |grep redis</p>
+<p>ll /proc/$PID/fd/</p>
+<p>![redis fds](./pics/redis fds.jpg)</p>
+</blockquote>
+<blockquote>
+<p>在linux中，安装man命令及文档后，可以方便地看到很多帮助文档</p>
+<p><code>yum install -y man man-pages</code></p>
+<p><code>man 2 read</code>，查看man中2类关于read的文档。2类代表系统调用</p>
+<p><img src="./pics/man%E6%96%87%E6%A1%A3%E7%B1%BB%E5%9E%8B.jpg" alt="man文档类型"></p>
+</blockquote>
+<h3 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h3><p><img src="./pics/NIO.jpg" alt="NIO"></p>
+<p>关键点：<font color='red'>内核的socket支持了SOCK_NONBLOCK类型，使read调用可以不阻塞，实现同步非阻塞NIO</font></p>
+<blockquote>
+<p>man 2 socket</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span><br><span class="line">       socket() creates an endpoint for communication and returns a descriptor.</span><br><span class="line">       ......</span><br><span class="line">       </span><br><span class="line">       Since  Linux  2.6.27， the type argument serves a second purpose: in addition to specifying a socket type， it may include the</span><br><span class="line">       bitwise OR of any of the following values， to modify the behavior of socket():</span><br><span class="line"></span><br><span class="line">       SOCK_NONBLOCK   Set the O_NONBLOCK file status flag on the new open file description.  Using this flag saves extra calls  to</span><br><span class="line">                       fcntl(2) to achieve the same result.</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="多路复用的NIO"><a href="#多路复用的NIO" class="headerlink" title="多路复用的NIO"></a>多路复用的NIO</h3><p><img src="./pics/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8NIO.jpg" alt="多路复用NIO"></p>
+<p>关键点：<font color='red'>内核提供了select调用，支持一次传递多个fds并交由内核轮询，实现多路复用NIO</font></p>
+<blockquote>
+<p>man 2 select</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span><br><span class="line">       select()  and pselect() allow a program to monitor multiple file descriptors， waiting until one or more of the file descrip‐</span><br><span class="line">       tors become &quot;ready&quot; for some class of I&#x2F;O operation (e.g.， input possible).  A file descriptor is considered ready if it  is</span><br><span class="line">       possible to perform the corresponding I&#x2F;O operation (e.g.， read(2)) without blocking.</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="共享空间的多路复用NIO"><a href="#共享空间的多路复用NIO" class="headerlink" title="共享空间的多路复用NIO"></a>共享空间的多路复用NIO</h3><p><img src="./pics/%E5%9F%BA%E4%BA%8Emmap%E7%9A%84%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8NIO.jpg" alt="基于mmap的多路复用NIO"></p>
+<p>当调用<code>epoll_create</code>后，内核就会创建一个<code>eventpoll</code>结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">eventpoll</span>&#123;</span>  </span><br><span class="line">    ....  </span><br><span class="line">    <span class="comment">/*红黑树的根节点，这颗树中存储着所有添加到epoll中的需要监控的事件*/</span>  </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_root</span>  <span class="title">rbr</span>;</span>  </span><br><span class="line">    <span class="comment">/*双链表中则存放着将要通过epoll_wait返回给用户的满足条件的事件*/</span>  </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">rdlist</span>;</span>  </span><br><span class="line">    ....  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>关键点：<font color='red'>内核提供了mmap调用，使内核态和用户态可以有一片共享空间。将fds放进共享空间，使两者都可见，无需将fds从两态间拷来拷去</font></p>
+<blockquote>
+<p>man 2 mmap</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span><br><span class="line">       mmap()  creates a new mapping in the virtual address space of the calling process.  The starting address for the new mapping</span><br><span class="line">       is specified in addr.  The length argument specifies the length of the mapping.</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>man epoll</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span><br><span class="line">       The  epoll  API performs a similar task to poll(2): monitoring multiple file descriptors to see if I&#x2F;O is possible on any of</span><br><span class="line">       them.  The epoll API can be used either as an edge-triggered or a level-triggered interface and scales well to large numbers</span><br><span class="line">       of watched file descriptors.  The following system calls are provided to create and manage an epoll instance:</span><br><span class="line"></span><br><span class="line">       *  epoll_create(2)  creates  an  epoll  instance and returns a file descriptor referring to that instance.  (The more recent</span><br><span class="line">          epoll_create1(2) extends the functionality of epoll_create(2).)</span><br><span class="line"></span><br><span class="line">       *  Interest in particular file descriptors is then registered via epoll_ctl(2).  The set of file descriptors currently  reg‐</span><br><span class="line">          istered on an epoll instance is sometimes called an epoll set.</span><br><span class="line"></span><br><span class="line">       *  epoll_wait(2) waits for I&#x2F;O events， blocking the calling thread if no events are currently available.</span><br></pre></td></tr></table></figure>
+
+<p>可以看出epoll具体包含三个调用</p>
+<ol>
+<li>epoll_crearte：创建一个epoll实例并返回引用该实例的文件描述符，该文件描述符用于对epoll接口的所有后续调用</li>
+<li>epoll_ctl：对epoll实例进行操作的系统调用，包括<code>EPOLL_CTL_ADD</code>、<code>EPOLL_CTL_MOD</code>和<code>EPOLL_CTL_DEL</code></li>
+<li>epoll_wait：等待I / O事件，如果当前没有可用的事件，则阻塞调用线程。方法返回就绪的fd个数，当出错时会返回-1</li>
+</ol>
+</blockquote>
+<h3 id="未实现的AIO"><a href="#未实现的AIO" class="headerlink" title="未实现的AIO"></a>未实现的AIO</h3><p>​    演进到”更高效的多路复用NIO”为止，所有的I/O操作都还是同步的：线程自己调用read方法去读数据，读出数据后自己进行处理。那什么是异步IO呢？</p>
+<p>​    异步I/O是一种异步回调机制，用户态线程告诉内核要读fd数据后，额外告诉内核一个回调/钩子函数，然后线程继续干其他的事。内核在发现fd中有数据可读后，调用传入的回调/钩子函数，来通知用户态线程已经有数据了，之后内核会继续干其他的事。</p>
+<p>​    异步I/O也叫做AIO，目前windows系统是正真实现了AIO的，而linux系统没有实现AIO，因为linux系统为了安全和稳定，对用户态和内核态交互狠严格，因此实现AIO非常困难。IBM和Oracle都实现过linux的AIO，但是linus有代码洁癖，对他们的实现都不满意，所以并没有加入内核中。</p>
+<h3 id="sendfile零拷贝"><a href="#sendfile零拷贝" class="headerlink" title="sendfile零拷贝"></a>sendfile零拷贝</h3><p>​    前面的内容不涉及零拷贝，零拷贝是另一个系统调用sendfile。</p>
+<p><img src="./pics/sendfile.jpg" alt="sendfile"></p>
+<blockquote>
+<p>man 2 sendfile</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DESCRIPTION</span><br><span class="line">       sendfile()  copies data between one file descriptor and another.  Because this copying is done within the kernel， sendfile()</span><br><span class="line">       is more efficient than the combination of read(2) and write(2)， which would require  transferring  data  to  and  from  user space.</span><br><span class="line"></span><br><span class="line">       in_fd should be a file descriptor opened for reading and out_fd should be a descriptor opened for writing</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="Redis底层架构"><a href="#Redis底层架构" class="headerlink" title="Redis底层架构"></a>Redis底层架构</h2><p><img src="./pics/Redis%E6%9E%B6%E6%9E%84.png" alt="Redis架构"></p>
+<ol>
+<li><p>epoll：redis底层通过epoll调用进行数据处理</p>
+</li>
+<li><p>跨主机8w并发：对于客户端和服务器不在一台主机上时，报文需要走两轮完整协议栈，一个服务端能处理8w左右的并发</p>
+</li>
+<li><p>单机15w并发：当客户端和服务端都在同一主机上时，无需走底层硬件，报文传递路径如下：</p>
+<p>socket接口 -&gt; 传输层（tcp/udp报文） -&gt; 网络层 -&gt; back to 传输层 -&gt; backto socket接口</p>
+<p>因此单机比跨主机性能更高，单机可支撑15w并发</p>
+</li>
+<li><p>单机多服务端：一台主机上可以有多个redis服务端，多个redis服务端之间用端口号区分</p>
+</li>
+<li><p>16个库：每个redis服务端自带16个库，名字分别是”0”、”1”…”15”，这个名字无法改变</p>
+</li>
+<li><p><font color='red'>一个工作线程</font>：每个redis服务端是一个进程，只有一个工作（worker）线程和其他的redis服务端线程。为什么只有一个worker？因为cpu不是redis的瓶颈，且单线程容易实现。redis的瓶颈最有可能是机器内存或网络带宽</p>
+</li>
+<li><p>顺序性：worker线程针对每个已到达连接内的指令按顺序执行</p>
+</li>
+</ol>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1135038815@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Redis/01-Redis介绍及NIO原理介绍</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">3.3k</span></p>
+    <p><span class="copy-title">发布时间:</span>2020-03-20, 23:32:59</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-04, 12:54:54</p>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2020-2024 Ryan</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#a','#b',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().split('\n').length - 1, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("https://i.loli.net/2019/07/22/5d3521411f3f169375.png");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
